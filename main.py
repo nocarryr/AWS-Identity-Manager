@@ -57,6 +57,8 @@ class Main(cmd2.Cmd):
             setattr(identity, attr, response)
             print('{0}.{1} set to {2}'.format(identity, attr, response))
 
+def main():
+    Main().cmdloop()
 
 if __name__ == '__main__':
-    Main().cmdloop()
+    main()
