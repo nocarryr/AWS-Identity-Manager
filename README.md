@@ -14,7 +14,7 @@ python setup.py install
 ## Usage
 Start the interactive command line tool:
 ```
-awsident
+awsidentity
 ```
 
 Then use the following commands:
