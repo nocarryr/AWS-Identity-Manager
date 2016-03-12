@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/nocarryr/AWS-Identity-Manager.svg?branch=master)](https://travis-ci.org/nocarryr/AWS-Identity-Manager) [![Coverage Status](https://coveralls.io/repos/github/nocarryr/AWS-Identity-Manager/badge.svg?branch=master)](https://coveralls.io/github/nocarryr/AWS-Identity-Manager?branch=master)
+
 # AWS-Identity-Manager
 Command line tool to store credentials for multiple AWS accounts and quickly switch between them.
 
