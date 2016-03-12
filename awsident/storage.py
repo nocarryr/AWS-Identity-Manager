@@ -21,16 +21,19 @@ class IdentityStore(object):
 
     Provies loading and saving to protected config file
     """
-    def __init__(self):
+    def __init__(self, config_path=None):
+        if config_path is None:
+            config_path = CONFIG_PATH
+        self.config_path = config_path
         self.identities = {}
         self._loading = True
         self.load_from_config()
         self._loading = False
     def load_from_config(self):
         self._loading = True
-        if not os.path.exists(CONFIG_PATH):
+        if not os.path.exists(self.config_path):
             return
-        fn = os.path.join(CONFIG_PATH, 'identities.json')
+        fn = os.path.join(self.config_path, 'identities.json')
         if not os.path.exists(fn):
             return
         with open(fn, 'r') as f:
@@ -39,9 +42,9 @@ class IdentityStore(object):
         self.add_identities(*data.values())
         self._loading = False
     def save_to_config(self):
-        if not os.path.exists(CONFIG_PATH):
-            os.makedirs(CONFIG_PATH)
-        fn = os.path.join(CONFIG_PATH, 'identities.json')
+        if not os.path.exists(self.config_path):
+            os.makedirs(self.config_path)
+        fn = os.path.join(self.config_path, 'identities.json')
         s = json.dumps(self.identities, indent=2, cls=IdentityEncoder)
         with open(fn, 'w') as f:
             f.write(s)
