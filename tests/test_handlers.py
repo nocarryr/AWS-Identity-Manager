@@ -1,11 +1,14 @@
 import os
-import ConfigParser
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
 
 import pytest
 
 def read_conf_file(handler_cls):
     assert os.path.exists(handler_cls.conf_filename)
-    p = ConfigParser.SafeConfigParser()
+    p = configparser.SafeConfigParser()
     p.read(handler_cls.conf_filename)
     d = {}
     for attr_key, option_name in handler_cls.attr_map.items():

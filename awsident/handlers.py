@@ -2,7 +2,10 @@ import os
 import stat
 import shutil
 import datetime
-import ConfigParser
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
 
 from awsident.identity import Identity
 from awsident.storage import identity_store
@@ -59,7 +62,7 @@ class ConfigHandler(object):
                 os.chmod(dirname, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
     def load_config(self):
         fn = os.path.expanduser(self.conf_filename)
-        p = ConfigParser.SafeConfigParser()
+        p = configparser.SafeConfigParser()
         if os.path.exists(fn):
             p.read(fn)
         if self.section_name.lower() != 'default':
@@ -82,7 +85,7 @@ class ConfigHandler(object):
             else:
                 try:
                     val = p.get(self.section_name, option_name)
-                except ConfigParser.NoOptionError:
+                except configparser.NoOptionError:
                     val = None
             if not val:
                 continue
