@@ -24,6 +24,8 @@ class Main(cmd2.Cmd):
         identity = ConfigHandler.change_identity(identity_id)
         print('Switched identity to {0}'.format(identity))
         return True
+    def help_change(self):
+        print('Select a saved identity and set credentials in your config files')
     def parsed(self, raw, **kwargs):
         if raw.startswith('add'):
             if self.add_command_step is None:
@@ -45,6 +47,8 @@ class Main(cmd2.Cmd):
             print('Identity {0} added'.format(identity))
         except IdentityExists as e:
             print('Identity already exists: {0}'.format(e.existing))
+    def help_add(self):
+        print('Add a new identity interactively')
     def do_edit(self, arg):
         identity_id = self.select(self.identities, 'Select Identity: ')
         identity = identity_store.get(identity_id)
@@ -56,6 +60,14 @@ class Main(cmd2.Cmd):
         else:
             setattr(identity, attr, response)
             print('{0}.{1} set to {2}'.format(identity, attr, response))
+    def help_edit(self):
+        print('Select a saved identity and edit its settings')
+    def print_topics(self, header, cmds, cmdlen, maxcol):
+        if 'Documented commands' in header:
+            cmds = ['save', 'change', 'add', 'edit']
+        elif 'Undocumented commands' in header:
+            cmds = ['exit', 'help', 'quit']
+        cmd2.Cmd.print_topics(self, header, cmds, cmdlen, maxcol)
 
 def main():
     Main().cmdloop()
