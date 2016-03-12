@@ -34,3 +34,17 @@ def test_serialization(identity_fixures, identity_store):
         identity = identity_store.get(data['access_key_id'])
         for key, val in data.items():
             assert getattr(identity, key) == val
+
+def test_identity_equality(identity_fixures, identity_store_with_data):
+    from awsident.identity import Identity
+
+    keys = identity_store_with_data.keys()
+    for data in identity_fixures:
+        stored = identity_store_with_data.get(data['access_key_id'])
+        test_ident = Identity(**data)
+        assert stored == test_ident
+        _keys = set(keys)
+        _keys.discard(stored.id)
+        for key in _keys:
+            other = identity_store_with_data.get(key)
+            assert other != test_ident
