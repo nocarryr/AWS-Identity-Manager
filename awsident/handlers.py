@@ -77,10 +77,13 @@ class ConfigHandler(object):
         for option_name, ident_key, val in self.iter_conf_vals(identity):
             if val is not None:
                 continue
-            try:
-                val = p.get(self.section_name, option_name)
-            except ConfigParser.NoOptionError:
-                val = None
+            if self.section_name.lower() == 'default':
+                val = p.defaults().get(option_name)
+            else:
+                try:
+                    val = p.get(self.section_name, option_name)
+                except ConfigParser.NoOptionError:
+                    val = None
             if not val:
                 continue
             setattr(identity, ident_key, val)
@@ -88,7 +91,10 @@ class ConfigHandler(object):
         p = self.load_config()
         fn = os.path.expanduser(self.conf_filename)
         for option_name, ident_key, val in self.iter_conf_vals(identity):
-            p.set(self.section_name, option_name, val)
+            if self.section_name.lower() == 'default':
+                p.defaults()[option_name] = val
+            else:
+                p.set(self.section_name, option_name, val)
         with open(fn, 'w') as f:
             p.write(f)
     def handle_perms(self):
