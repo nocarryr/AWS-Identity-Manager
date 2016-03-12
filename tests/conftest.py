@@ -17,9 +17,6 @@ def identity_fixures():
 def identity_store(tmpdir):
     from awsident.storage import IdentityStore
     identity_store = IdentityStore(config_path=str(tmpdir))
-    def fin():
-        identity_store.identities.clear()
-        identity_store.save_to_config()
     return identity_store
 
 @pytest.fixture
@@ -28,7 +25,4 @@ def identity_store_with_data(tmpdir):
     identity_store = IdentityStore(config_path=str(tmpdir))
     for data in identity_fixures():
         identity_store.add_identity(data)
-    def fin():
-        identity_store.identities.clear()
-        identity_store.save_to_config()
     return identity_store
