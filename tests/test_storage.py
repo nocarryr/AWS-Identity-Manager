@@ -19,7 +19,7 @@ def test_id_validation(identity_fixures, identity_store):
     identity_store.add_identities(*identity_fixures)
     with pytest.raises(IdentityExists):
         identity_store.add_identity(identity_fixures[0])
-    identity = identity_store.identities.values()[0]
+    identity = list(identity_store.values())[0]
     original_id = identity.id
     identity.access_key_id = 'ichanged'
     assert 'ichanged' in identity_store.keys()
