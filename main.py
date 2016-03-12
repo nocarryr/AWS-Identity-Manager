@@ -4,10 +4,10 @@ from awsident.storage import identity_store, IdentityExists
 from awsident.handlers import ConfigHandler
 
 class Main(cmd2.Cmd):
+    prompt = '> '
     multilineCommands = ['add']
     add_command_steps = ['name', 'access_key_id', 'secret_access_key']
     add_command_step = None
-    debug = True
     @property
     def identities(self):
         return [(key, str(identity)) for key, identity in identity_store.items()]
@@ -68,6 +68,8 @@ class Main(cmd2.Cmd):
         elif 'Undocumented commands' in header:
             cmds = ['exit', 'help', 'quit']
         cmd2.Cmd.print_topics(self, header, cmds, cmdlen, maxcol)
+    def preloop(self):
+        self.do_help('')
 
 def main():
     Main().cmdloop()
