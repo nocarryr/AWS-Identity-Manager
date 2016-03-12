@@ -1,3 +1,4 @@
+import os
 import string
 
 import pytest
@@ -26,3 +27,20 @@ def identity_store_with_data(tmpdir):
     for data in identity_fixures():
         identity_store.add_identity(data)
     return identity_store
+
+@pytest.fixture
+def config_handler_fixtures(tmpdir, identity_store):
+    from awsident import handlers
+
+    handlers.identity_store = identity_store
+    conf_files = {}
+    for cls in handlers.ConfigHandler.__subclasses__():
+        fn = os.path.expanduser(cls.conf_filename)
+        p = tmpdir.join(fn)
+        cls.conf_filename = str(p)
+        conf_files[cls] = p
+    return dict(
+        handler=handlers.ConfigHandler,
+        conf_files=conf_files,
+        identity_store=identity_store,
+    )
