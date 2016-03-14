@@ -5,7 +5,7 @@ from setuptools import setup
 CMD_LIB = 'cmd2'
 if sys.version_info.major > 3 or (sys.version_info.major == 3 and
                                   sys.version_info.minor >= 5):
-    CMD_LIB = 'git+https://github.com/python-cmd2/cmd2@6ee37b4#egg=cmd2-6ee37b4'
+    CMD_LIB = 'git+https://github.com/python-cmd2/cmd2.git@6ee37b4#egg=cmd2-6ee37b4'
 
 setup(
     name = "aws-identity-manager",
