@@ -1,6 +1,6 @@
 import pytest
 
-from conftest import read_conf_file
+from conftest import conf_matches_identity
 
 def test_identity_change(config_handler_fixtures, identity_fixures):
     handler = config_handler_fixtures['handler']
@@ -8,10 +8,7 @@ def test_identity_change(config_handler_fixtures, identity_fixures):
     identity_store.add_identities(*identity_fixures)
     identity = list(identity_store.values())[0]
     handler.change_identity(identity)
-    for cls in handler.__subclasses__():
-        d = read_conf_file(cls)
-        for key in cls.attr_map.keys():
-            assert getattr(identity, key) == d[key]
+    assert conf_matches_identity(handler, identity)
 
 def test_identity_save(config_handler_fixtures, identity_fixures):
     from awsident.storage import IdentityExists

@@ -27,6 +27,18 @@ def read_conf_file(handler_cls):
         d[attr_key] = val
     return d
 
+def conf_matches_identity(handler_cls, identity):
+    from awsident.identity import Identity
+
+    if not isinstance(identity, Identity):
+        identity = Identity(**identity)
+    for cls in handler_cls.__subclasses__():
+        d = read_conf_file(cls)
+        for key in cls.attr_map.keys():
+            if getattr(identity, key) != d[key]:
+                return False
+    return True
+
 @pytest.fixture
 def identity_fixures():
     l = []
