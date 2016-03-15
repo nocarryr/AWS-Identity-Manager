@@ -104,7 +104,7 @@ def cli_app(config_handler_fixtures, monkeypatch):
     fake_input = FakeInput()
 
     if PY2:
-        monkeypatch.setattr('builtins.raw_input', fake_input)
+        monkeypatch.setattr('__builtin__.raw_input', fake_input)
     else:
         monkeypatch.setattr('builtins.input', fake_input)
 
