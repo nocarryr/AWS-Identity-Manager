@@ -1,5 +1,7 @@
 import os
 
+from conftest import conf_matches_identity
+
 def test_store_empty(cli_app):
     identity_store = cli_app.config_handler_fixtures['identity_store']
     cli_app.send_input('save')
@@ -33,3 +35,18 @@ def test_edit_command(cli_app, identity_fixures):
     print(out)
     identity = identity_store.get('a_different_id')
     assert identity is not None
+
+def test_change_command(cli_app, identity_fixures):
+    identity_store = cli_app.config_handler_fixtures['identity_store']
+    identity_store.add_identities(*identity_fixures)
+    handler = cli_app.config_handler_fixtures['handler']
+    def change_and_test(ident_index):
+        key, name = cli_app.identities[i]
+        identity = identity_store.get(key)
+        assert identity is not None
+        cli_app.send_input('change', str(i + 1))
+        out = cli_app.stdout._read()
+        print(out)
+        assert conf_matches_identity(handler, identity)
+    for i in range(3):
+        change_and_test(i)
