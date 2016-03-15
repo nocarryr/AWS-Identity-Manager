@@ -1,7 +1,11 @@
+import sys
+
 import cmd2
 
 from awsident.storage import identity_store, IdentityExists
 from awsident.handlers import ConfigHandler
+
+PY2 = sys.version_info.major == 2
 
 class Main(cmd2.Cmd):
     prompt = '> '
@@ -54,7 +58,10 @@ class Main(cmd2.Cmd):
         identity = identity_store.get(identity_id)
         attr = self.select(self.add_command_steps, 'Select Attribute: ')
         prompt = 'Enter {0} [{1}]: '.format(attr, getattr(identity, attr))
-        response = raw_input(prompt)
+        if PY2:
+            response = raw_input(prompt)
+        else:
+            response = input(prompt)
         if not response:
             print('No change detected')
         else:
