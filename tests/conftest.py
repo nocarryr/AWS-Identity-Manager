@@ -142,6 +142,8 @@ def cli_app(config_handler_fixtures, monkeypatch):
             t = self.cli_thread
             t.running.set()
             return main.Main.pseudo_raw_input(self, prompt)
+        def do_change(self, arg):
+            main.Main.do_change(self, arg)
 
     class CliThread(threading.Thread):
         def __init__(self):
