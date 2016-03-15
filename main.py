@@ -1,8 +1,10 @@
 import sys
+import os
+import glob
 
 import cmd2
 
-from awsident.storage import identity_store, IdentityExists
+from awsident.storage import identity_store, IdentityExists, IAMCSVParser
 from awsident.handlers import ConfigHandler
 
 PY2 = sys.version_info.major == 2
@@ -69,9 +71,45 @@ class Main(cmd2.Cmd):
             print('{0}.{1} set to {2}'.format(identity, attr, response))
     def help_edit(self):
         print('Select a saved identity and edit its settings')
+    def do_import(self, arg):
+        parser = IAMCSVParser(os.path.expanduser(arg))
+        identities = parser()
+        names = []
+        for identity in identities:
+            try:
+                identity_store.add_identity(identity)
+                names.append(identity.name)
+            except IdentityExists:
+                print('Identity "{0}" already exists'.format(identity))
+        print('Imported identities: {0}'.format(', '.join(names)))
+    def help_import(self):
+        print('Import identities from a csv file downloaded from the IAM Console')
+    def complete_import(self, text, line, begIdx, endIdx):
+        return self._path_completions(text, line, begIdx, endIdx)
+    def _path_completions(self, text, line, begIdx, endIdx):
+        def _append_slash_if_dir(p):
+            if p and os.path.isdir(p) and not p.endswith(os.sep):
+                return ''.join([p, os.sep])
+            return p
+        before_arg = line.rfind(" ", 0, begIdx)
+        if before_arg == -1:
+            return # arg not found
+
+        fixed = line[before_arg+1:begIdx]  # fixed portion of the arg
+        arg = line[before_arg+1:endIdx]
+        pattern = line[before_arg+1:endIdx] + '*'
+        user_dir = os.path.expanduser('~' + os.sep)
+
+        completions = []
+        for path in glob.glob(os.path.expanduser(pattern)):
+            path = _append_slash_if_dir(path)
+            if path.startswith(user_dir):
+                path = path.replace(user_dir, '~' + os.sep)
+            completions.append(path.replace(fixed, "", 1))
+        return completions
     def print_topics(self, header, cmds, cmdlen, maxcol):
         if 'Documented commands' in header:
-            cmds = ['save', 'change', 'add', 'edit']
+            cmds = ['save', 'change', 'add', 'edit', 'import']
         elif 'Undocumented commands' in header:
             cmds = ['exit', 'help', 'quit']
         cmd2.Cmd.print_topics(self, header, cmds, cmdlen, maxcol)

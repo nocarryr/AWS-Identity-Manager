@@ -50,3 +50,10 @@ def test_change_command(cli_app, identity_fixures):
         assert conf_matches_identity(handler, identity)
     for i in range(3):
         change_and_test(i)
+
+def test_import_command(cli_app):
+    identity_store = cli_app.config_handler_fixtures['identity_store']
+    assert len(identity_store.identities) == 0
+    cli_app.send_input('import tests/credentials.csv')
+    print(cli_app.stdout._read())
+    assert len(identity_store.identities) == 2
