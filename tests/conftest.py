@@ -10,10 +10,6 @@ except ImportError:
 
 import pytest
 
-collect_ignore = []
-if sys.version_info.major == 3 and sys.version_info.minor == 5:
-    collect_ignore.append('test_cli.py')
-
 def read_conf_file(handler_cls):
     assert os.path.exists(handler_cls.conf_filename)
     p = configparser.SafeConfigParser()

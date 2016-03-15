@@ -1,4 +1,14 @@
+import sys
 from setuptools import setup
+
+py_ver = sys.version_info
+
+CMD_REQ = 'cmd2'
+DEP_LINKS = []
+if py_ver.major >= 3:
+    if py_ver.major > 3 or py_ver.minor >= 5:
+        CMD_REQ = 'cmd2>0.6.8'
+        DEP_LINKS = ['git+https://github.com/python-cmd2/cmd2.git@0df289c#egg=cmd2-0.6.9a0']
 
 setup(
     name = "aws-identity-manager",
@@ -17,7 +27,8 @@ setup(
             'awsidentity = main:main',
         ],
     },
-    install_requires=['cmd2'],
+    install_requires=[CMD_REQ],
+    dependency_links=DEP_LINKS,
     setup_requires=['setuptools-markdown'],
     long_description_markdown_filename='README.md',
     classifiers = [
