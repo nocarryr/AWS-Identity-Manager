@@ -1,8 +1,13 @@
+import sys
 import os
 import string
 import threading
 
 import pytest
+
+collect_ignore = []
+if sys.version_info.major == 3 and sys.version_info.minor == 5:
+    collect_ignore.append('test_cli.py')
 
 @pytest.fixture
 def identity_fixures():

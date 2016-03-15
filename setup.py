@@ -1,11 +1,4 @@
-import sys
-
 from setuptools import setup
-
-DEP_LINKS = []
-if sys.version_info.major > 3 or (sys.version_info.major == 3 and
-                                  sys.version_info.minor >= 5):
-    DEP_LINKS.append('https://github.com/python-cmd2/cmd2/tarball/78b6dd61d4b863eaf4b2bf331119dfec9b6bfe76')
 
 setup(
     name = "aws-identity-manager",
@@ -25,7 +18,6 @@ setup(
         ],
     },
     install_requires=['cmd2'],
-    dependency_links=DEP_LINKS,
     setup_requires=['setuptools-markdown'],
     long_description_markdown_filename='README.md',
     classifiers = [
