@@ -11,7 +11,7 @@ install:
   - pip install pytest-cov coveralls
   - pip install -e .
 script:
-  - py.test --cov-config .coveragerc --cov=awsident
+  - py.test --cov-config .coveragerc --cov=awsident --cov=main.py
 after_success:
   - coveralls
 deploy:

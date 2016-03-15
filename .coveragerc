@@ -1,2 +1,5 @@
 [run]
 source = awsident/*,main.py
+
+[report]
+include = awsident/*,main.py
