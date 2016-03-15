@@ -2,6 +2,7 @@ import sys
 import os
 import string
 import threading
+import collections
 try:
     import ConfigParser as configparser
 except ImportError:
@@ -9,6 +10,8 @@ except ImportError:
 
 
 import pytest
+
+PY2 = sys.version_info.major == 2
 
 def read_conf_file(handler_cls):
     assert os.path.exists(handler_cls.conf_filename)
@@ -79,7 +82,32 @@ def config_handler_fixtures(tmpdir, identity_store):
 
 
 @pytest.fixture
-def cli_app(config_handler_fixtures):
+def cli_app(config_handler_fixtures, monkeypatch):
+
+
+    class FakeInput(object):
+        def __init__(self):
+            self.buffer = collections.deque()
+            self.input_ready = threading.Event()
+        def __call__(self, *args):
+            self.input_ready.wait()
+            s = self.buffer.popleft()
+            if not len(self.buffer):
+                self.input_ready.clear()
+            return s
+        def send_input(self, *args):
+            print('fake_input: ', args)
+            for arg in args:
+                self.buffer.append(arg)
+            self.input_ready.set()
+
+    fake_input = FakeInput()
+
+    if PY2:
+        monkeypatch.setattr('builtins.raw_input', fake_input)
+    else:
+        monkeypatch.setattr('builtins.input', fake_input)
+
     import main
     main.identity_store = config_handler_fixtures['identity_store']
 
@@ -98,38 +126,27 @@ def cli_app(config_handler_fixtures):
             return s
 
     class CliApp(main.Main):
-        def send_input(self, s):
+        def send_input(self, *args):
+            fake_input.send_input(*args)
             t = self.cli_thread
-            t.input_buffer = s
-            t.input_ready.set()
             t.postcmd.wait()
             t.postcmd.clear()
         def preloop(self):
             self.cli_thread.running.set()
         def postcmd(self, stop, line):
-            self.cli_thread.postcmd.set()
+            t = self.cli_thread
+            t.postcmd.set()
             return stop
         def pseudo_raw_input(self, prompt):
             t = self.cli_thread
             t.running.set()
-            t.input_ready.wait()
-            if isinstance(t.input_buffer, list):
-                data = t.input_buffer[0]
-                t.input_buffer = t.input_buffer[1:]
-                if not len(t.input_buffer):
-                    t.input_buffer = None
-                    t.input_ready.clear()
-            else:
-                data = t.input_buffer
-                t.input_ready.clear()
-            return data
+            return main.Main.pseudo_raw_input(self, prompt)
 
     class CliThread(threading.Thread):
         def __init__(self):
             super(CliThread, self).__init__()
             self.running = threading.Event()
             self.stopped = threading.Event()
-            self.input_ready = threading.Event()
             self.postcmd = threading.Event()
         def run(self):
             app = self.cli_app = CliApp()

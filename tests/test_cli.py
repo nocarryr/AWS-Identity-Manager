@@ -18,7 +18,7 @@ def test_add_command(cli_app, identity_fixures):
     args = ['add']
 
     args.extend([data[key] for key in cli_app.add_command_steps])
-    cli_app.send_input(args)
+    cli_app.send_input(*args)
     print(cli_app.stdout._read())
 
     identity = identity_store.get(data['access_key_id'])
