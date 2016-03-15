@@ -24,3 +24,12 @@ def test_add_command(cli_app, identity_fixures):
     identity = identity_store.get(data['access_key_id'])
     test_identity = Identity(**data)
     assert identity == test_identity
+
+def test_edit_command(cli_app, identity_fixures):
+    identity_store = cli_app.config_handler_fixtures['identity_store']
+    identity_store.add_identities(*identity_fixures)
+    cli_app.send_input('edit', '1', '2', 'a_different_id')
+    out = cli_app.stdout._read()
+    print(out)
+    identity = identity_store.get('a_different_id')
+    assert identity is not None
