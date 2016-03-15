@@ -1,2 +1,2 @@
 [run]
-source = awsident/*
+source = awsident/*,main.py
