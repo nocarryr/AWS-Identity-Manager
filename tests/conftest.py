@@ -158,8 +158,13 @@ def cli_app(config_handler_fixtures, monkeypatch):
         def stop(self):
             if self.stopped.is_set():
                 return
-            self.cli_app.send_input('exit')
-            self.stopped.wait()
+            self.running.clear()
+            self.postcmd.set()
+            self.cli_app.send_input(*['exit', ';\n', 'EOF', '\x03', '\x04'])
+            self.stopped.wait(5)
+            if not self.stopped.is_set():
+                print('cli hang.. exiting')
+                sys.exit(1)
 
     cli_thread = CliThread()
     cli_thread.daemon = True
