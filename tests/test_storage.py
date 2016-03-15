@@ -48,3 +48,12 @@ def test_identity_equality(identity_fixures, identity_store_with_data):
         for key in _keys:
             other = identity_store_with_data.get(key)
             assert other != test_ident
+
+def test_iam_parser(identity_store):
+    from awsident.storage import IAMCSVParser
+    fn = os.path.join('tests', 'credentials.csv')
+    parser = IAMCSVParser(fn)
+    identities = parser()
+    identity_store.add_identities(*identities)
+    for key in ['imported_a', 'imported_b']:
+        assert identity_store.get(key) is not None
