@@ -132,6 +132,7 @@ def cli_app(config_handler_fixtures, monkeypatch):
             t.postcmd.wait()
             t.postcmd.clear()
         def preloop(self):
+            main.Main.preloop(self)
             self.cli_thread.running.set()
         def postcmd(self, stop, line):
             t = self.cli_thread
