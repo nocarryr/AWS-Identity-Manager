@@ -114,6 +114,6 @@ class IAMCSVParser(IdentityParser):
             if header is None:
                 header = line
                 continue
-            d = {k: line[i] for k, i in enumerate(keys)}
+            d = {k: line[i] for i, k in enumerate(keys)}
             identities.append(Identity(**d))
         return identities
