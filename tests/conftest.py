@@ -2,12 +2,30 @@ import sys
 import os
 import string
 import threading
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
+
 
 import pytest
 
 collect_ignore = []
 if sys.version_info.major == 3 and sys.version_info.minor == 5:
     collect_ignore.append('test_cli.py')
+
+def read_conf_file(handler_cls):
+    assert os.path.exists(handler_cls.conf_filename)
+    p = configparser.SafeConfigParser()
+    p.read(handler_cls.conf_filename)
+    d = {}
+    for attr_key, option_name in handler_cls.attr_map.items():
+        if handler_cls.section_name.lower() == 'default':
+            val = p.defaults().get(option_name)
+        else:
+            val = p.get(handler_cls.section_name, option_name)
+        d[attr_key] = val
+    return d
 
 @pytest.fixture
 def identity_fixures():

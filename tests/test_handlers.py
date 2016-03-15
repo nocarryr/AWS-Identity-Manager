@@ -1,23 +1,6 @@
-import os
-try:
-    import ConfigParser as configparser
-except ImportError:
-    import configparser
-
 import pytest
 
-def read_conf_file(handler_cls):
-    assert os.path.exists(handler_cls.conf_filename)
-    p = configparser.SafeConfigParser()
-    p.read(handler_cls.conf_filename)
-    d = {}
-    for attr_key, option_name in handler_cls.attr_map.items():
-        if handler_cls.section_name.lower() == 'default':
-            val = p.defaults().get(option_name)
-        else:
-            val = p.get(handler_cls.section_name, option_name)
-        d[attr_key] = val
-    return d
+from conftest import read_conf_file
 
 def test_identity_change(config_handler_fixtures, identity_fixures):
     handler = config_handler_fixtures['handler']
