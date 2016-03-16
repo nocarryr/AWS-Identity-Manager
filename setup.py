@@ -24,7 +24,7 @@ setup(
     scripts=['main.py'],
     entry_points={
         'console_scripts':[
-            'awsidentity = main:main',
+            'awsidentity = main:run',
         ],
     },
     install_requires=[CMD_REQ],
