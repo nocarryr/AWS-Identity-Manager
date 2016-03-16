@@ -11,7 +11,7 @@ install:
   - pip install pytest-cov coveralls pexpect
   - python setup.py develop
 script:
-  - py.test --cov-config .coveragerc --cov=awsident --cov=.
+  - py.test --cov-config .coveragerc --cov=awsident
 after_success:
   - coveralls
 deploy:

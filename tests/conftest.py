@@ -87,7 +87,7 @@ def cli_app(config_handler_fixtures):
     with open(os.path.join(conf_path, 'handlers.json'), 'w') as f:
         f.write(json.dumps(handler_conf))
     lf = open('pexpect.log', 'wb')
-    app = pexpect.spawn('python main.py --pytest-mode -c {0}'.format(conf_path), logfile=lf)
+    app = pexpect.spawn('awsidentity --pytest-mode -c {0}'.format(conf_path), logfile=lf)
     app.config_handler_fixtures = config_handler_fixtures
     app.expect('> ')
     def fin():

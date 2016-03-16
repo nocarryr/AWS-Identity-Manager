@@ -21,10 +21,9 @@ setup(
     keywords = "aws",
     packages=['awsident'],
     include_package_data=True,
-    scripts=['main.py'],
     entry_points={
         'console_scripts':[
-            'awsidentity = main:run',
+            'awsidentity = awsident.main:run',
         ],
     },
     install_requires=[CMD_REQ],
