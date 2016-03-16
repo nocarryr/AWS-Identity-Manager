@@ -8,7 +8,7 @@ addons:
     packages:
     - pandoc
 install:
-  - pip install pytest-cov coveralls
+  - pip install pytest-cov coveralls pexpect
   - python setup.py develop
 script:
   - py.test --cov-config .coveragerc --cov=awsident --cov=main.py
