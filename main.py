@@ -127,6 +127,7 @@ def main():
     sys.argv = remaining
     config_path = os.path.expanduser(o.get('config_path'))
     identity_store.config_path = config_path
+    ConfigHandler.handler_config_path = config_path
     app = Main()
     return app
 

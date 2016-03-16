@@ -70,6 +70,7 @@ def config_handler_fixtures(tmpdir, identity_store):
 
     handlers.identity_store = identity_store
     handlers.ConfigHandler.conf_root = str(tmpdir)
+    handlers.ConfigHandler.handler_config_path = identity_store.config_path
     return dict(
         handler=handlers.ConfigHandler,
         identity_store=identity_store,
