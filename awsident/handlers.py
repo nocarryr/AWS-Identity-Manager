@@ -14,6 +14,7 @@ class ConfigHandler(object):
     """Handler for getting and setting config file credentials
 
     """
+    conf_root = '~'
     conf_filename = None
     section_name = 'default'
     attr_map = {
@@ -44,6 +45,11 @@ class ConfigHandler(object):
         for _cls in ConfigHandler.__subclasses__():
             _cls()._change_identity(identity)
         return identity
+    @property
+    def full_conf_filename(self):
+        fn = os.path.join(self.conf_root, self.conf_filename)
+        fn = os.path.expanduser(fn)
+        return fn
     def _save_identity(self, identity):
         self._handle_identity_save(identity)
     def _change_identity(self, identity):
@@ -51,7 +57,7 @@ class ConfigHandler(object):
         self._handle_identity_change(identity)
         self.handle_perms()
     def handle_paths(self):
-        fn = os.path.expanduser(self.conf_filename)
+        fn = self.full_conf_filename
         bak_fn = '.'.join([fn, 'bak'])
         if os.path.exists(fn) and not os.path.exists(bak_fn):
             shutil.copy2(fn, bak_fn)
@@ -61,7 +67,7 @@ class ConfigHandler(object):
                 os.makedirs(dirname)
                 os.chmod(dirname, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
     def load_config(self):
-        fn = os.path.expanduser(self.conf_filename)
+        fn = self.full_conf_filename
         p = configparser.SafeConfigParser()
         if os.path.exists(fn):
             p.read(fn)
@@ -92,7 +98,7 @@ class ConfigHandler(object):
             setattr(identity, ident_key, val)
     def _handle_identity_change(self, identity):
         p = self.load_config()
-        fn = os.path.expanduser(self.conf_filename)
+        fn = self.full_conf_filename
         for option_name, ident_key, val in self.iter_conf_vals(identity):
             if self.section_name.lower() == 'default':
                 p.defaults()[option_name] = val
@@ -101,19 +107,19 @@ class ConfigHandler(object):
         with open(fn, 'w') as f:
             p.write(f)
     def handle_perms(self):
-        fn = os.path.expanduser(self.conf_filename)
+        fn = self.full_conf_filename
         os.chmod(fn, stat.S_IRUSR | stat.S_IWUSR)
 
 class BotoConfigHandler(ConfigHandler):
-    conf_filename = '~/.boto'
+    conf_filename = '.boto'
     section_name = 'Credentials'
 
 class S3CmdConfigHandler(ConfigHandler):
-    conf_filename = '~/.s3cfg'
+    conf_filename = '.s3cfg'
     attr_map = {
         'access_key_id':'access_key',
         'secret_access_key':'secret_key',
     }
 
 class AwsConfigHandler(ConfigHandler):
-    conf_filename = '~/.aws/credentials'
+    conf_filename = '.aws/credentials'

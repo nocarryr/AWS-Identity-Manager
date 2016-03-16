@@ -14,9 +14,10 @@ import pytest
 PY2 = sys.version_info.major == 2
 
 def read_conf_file(handler_cls):
-    assert os.path.exists(handler_cls.conf_filename)
+    fn = handler_cls().full_conf_filename
+    assert os.path.exists(fn)
     p = configparser.SafeConfigParser()
-    p.read(handler_cls.conf_filename)
+    p.read(fn)
     d = {}
     for attr_key, option_name in handler_cls.attr_map.items():
         if handler_cls.section_name.lower() == 'default':
@@ -68,15 +69,9 @@ def config_handler_fixtures(tmpdir, identity_store):
     from awsident import handlers
 
     handlers.identity_store = identity_store
-    conf_files = {}
-    for cls in handlers.ConfigHandler.__subclasses__():
-        fn = os.path.expanduser(cls.conf_filename)
-        p = tmpdir.join(fn)
-        cls.conf_filename = str(p)
-        conf_files[cls] = p
+    handlers.ConfigHandler.conf_root = str(tmpdir)
     return dict(
         handler=handlers.ConfigHandler,
-        conf_files=conf_files,
         identity_store=identity_store,
     )
 
