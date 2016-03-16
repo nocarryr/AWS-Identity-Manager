@@ -24,11 +24,28 @@ class IdentityStore(object):
     def __init__(self, config_path=None):
         if config_path is None:
             config_path = CONFIG_PATH
-        self.config_path = config_path
+        self._config_path = config_path
         self.identities = {}
-        self._loading = True
         self.load_from_config()
         self._loading = False
+    @property
+    def config_path(self):
+        return getattr(self, '_config_path', None)
+    @config_path.setter
+    def config_path(self, value):
+        if value == self.config_path:
+            return
+        self._config_path = value
+        self.reload()
+    def reload(self):
+        self._loading = True
+        self.clear()
+        self.load_from_config()
+        self._loading = False
+    def clear(self):
+        for identity in self.values():
+            identity.storage = None
+        self.identities.clear()
     def load_from_config(self):
         self._loading = True
         if not os.path.exists(self.config_path):

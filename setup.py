@@ -24,12 +24,13 @@ setup(
     scripts=['main.py'],
     entry_points={
         'console_scripts':[
-            'awsidentity = main:main',
+            'awsidentity = main:run',
         ],
     },
     install_requires=[CMD_REQ],
     dependency_links=DEP_LINKS,
     setup_requires=['setuptools-markdown'],
+    tests_require=['pexpect'],
     long_description_markdown_filename='README.md',
     classifiers = [
         'Development Status :: 3 - Alpha',

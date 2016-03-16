@@ -1,6 +1,7 @@
 import sys
 import os
 import glob
+import argparse
 
 import cmd2
 
@@ -14,6 +15,7 @@ class Main(cmd2.Cmd):
     multilineCommands = ['add']
     add_command_steps = ['name', 'access_key_id', 'secret_access_key']
     add_command_step = None
+    pytest_mode = False
     @property
     def identities(self):
         return [(key, str(identity)) for key, identity in identity_store.items()]
@@ -29,7 +31,8 @@ class Main(cmd2.Cmd):
         identity_id = self.select(self.identities, 'Select Identity: ')
         identity = ConfigHandler.change_identity(identity_id)
         print('Switched identity to {0}'.format(identity))
-        return True
+        if not self.pytest_mode:
+            return True
     def help_change(self):
         print('Select a saved identity and set credentials in your config files')
     def parsed(self, raw, **kwargs):
@@ -107,6 +110,9 @@ class Main(cmd2.Cmd):
                 path = path.replace(user_dir, '~' + os.sep)
             completions.append(path.replace(fixed, "", 1))
         return completions
+    def do_reload(self, arg):
+        identity_store.reload()
+        print('Reload complete')
     def print_topics(self, header, cmds, cmdlen, maxcol):
         if 'Documented commands' in header:
             cmds = ['save', 'change', 'add', 'edit', 'import']
@@ -117,7 +123,24 @@ class Main(cmd2.Cmd):
         self.do_help('')
 
 def main():
-    Main().cmdloop()
+    default_conf = '~/.aws-identity-manager'
+    p = argparse.ArgumentParser()
+    p.add_argument('-c', '--config', dest='config_path', default=default_conf,
+        help='Configuration path (default is {0})'.format(default_conf))
+    p.add_argument('--pytest-mode', dest='pytest_mode', action='store_true')
+    args, remaining = p.parse_known_args()
+    o = vars(args)
+    sys.argv = remaining
+    config_path = os.path.expanduser(o.get('config_path'))
+    identity_store.config_path = config_path
+    ConfigHandler.handler_config_path = config_path
+    Main.pytest_mode = o.get('pytest_mode')
+    app = Main()
+    return app
+
+def run():
+    app = main()
+    app.cmdloop()
 
 if __name__ == '__main__':
-    main()
+    run()
