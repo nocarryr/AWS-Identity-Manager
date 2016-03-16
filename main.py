@@ -122,8 +122,9 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('-c', '--config', dest='config_path', default=default_conf,
         help='Configuration path (default is {0})'.format(default_conf))
-    args = p.parse_args()
+    args, remaining = p.parse_known_args()
     o = vars(args)
+    sys.argv = remaining
     config_path = os.path.expanduser(o.get('config_path'))
     identity_store.config_path = config_path
     app = Main()
