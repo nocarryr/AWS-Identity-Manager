@@ -1,6 +1,7 @@
 import sys
 import os
 import glob
+import argparse
 
 import cmd2
 
@@ -117,7 +118,20 @@ class Main(cmd2.Cmd):
         self.do_help('')
 
 def main():
-    Main().cmdloop()
+    default_conf = '~/.aws-identity-manager'
+    p = argparse.ArgumentParser()
+    p.add_argument('-c', '--config', dest='config_path', default=default_conf,
+        help='Configuration path (default is {0})'.format(default_conf))
+    args = p.parse_args()
+    o = vars(args)
+    config_path = os.path.expanduser(o.get('config_path'))
+    identity_store.config_path = config_path
+    app = Main()
+    return app
+
+def run():
+    app = main()
+    app.cmdloop()
 
 if __name__ == '__main__':
-    main()
+    run()
