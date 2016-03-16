@@ -108,6 +108,9 @@ class Main(cmd2.Cmd):
                 path = path.replace(user_dir, '~' + os.sep)
             completions.append(path.replace(fixed, "", 1))
         return completions
+    def do_reload(self, arg):
+        identity_store.reload()
+        print('Reload complete')
     def print_topics(self, header, cmds, cmdlen, maxcol):
         if 'Documented commands' in header:
             cmds = ['save', 'change', 'add', 'edit', 'import']
