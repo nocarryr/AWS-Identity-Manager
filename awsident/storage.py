@@ -35,9 +35,13 @@ class IdentityStore(object):
     def config_path(self, value):
         if value == self.config_path:
             return
-        self.clear()
         self._config_path = value
+        self.reload()
+    def reload(self):
+        self._loading = True
+        self.clear()
         self.load_from_config()
+        self._loading = False
     def clear(self):
         for identity in self.values():
             identity.storage = None
