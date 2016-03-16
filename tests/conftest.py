@@ -91,5 +91,7 @@ def cli_app(config_handler_fixtures):
     app.config_handler_fixtures = config_handler_fixtures
     app.expect('> ')
     def fin():
+        app.sendline('EOF')
+        app.wait()
         lf.close()
     return app
