@@ -75,3 +75,34 @@ def test_import_command(cli_app):
 
     identity_store.reload()
     assert len(identity_store.identities) == 2
+
+def test_import_completion(cli_app):
+    def get_relative_cwd():
+        home_dir = os.path.expanduser('~')
+        p = ''
+        head = os.getcwd()
+        while not os.path.samefile(home_dir, head):
+            head, tail = os.path.split(head)
+            p = os.path.join(tail, p)
+        return p
+
+    # direct relative path completion
+    cli_app.send('import test\tcredent\t')
+    cli_app.expect('.csv')
+    cli_app.send(os.linesep)
+    cli_app.expect('> ')
+
+    # user-expanded (~) completion
+    rel_cwd = get_relative_cwd()
+    print('relative cwd: {0}'.format(rel_cwd))
+    rel_cwd = os.path.join('~', rel_cwd)
+    cli_app.send('import {0}\ttest\tcredent\t'.format(rel_cwd))
+    cli_app.expect('.csv')
+    cli_app.send(os.linesep)
+    cli_app.expect('> ')
+
+    # absolute path completion
+    cli_app.send('import {0}\ttest\tcredent\t'.format(os.getcwd()))
+    cli_app.expect('.csv')
+    cli_app.send(os.linesep)
+    cli_app.expect('> ')
