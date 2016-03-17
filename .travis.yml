@@ -13,7 +13,7 @@ install:
 script:
   - py.test --cov-config .coveragerc --cov=awsident
 after_success:
-  - coverage collect
+  - coverage combine
   - coveralls
 deploy:
   provider: pypi
