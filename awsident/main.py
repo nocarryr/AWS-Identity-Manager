@@ -108,7 +108,7 @@ class Main(cmd2.Cmd):
         completions = []
         for path in glob.glob(os.path.expanduser(pattern)):
             path = _append_slash_if_dir(path)
-            if path.startswith(user_dir):
+            if path.startswith(user_dir) and pattern.startswith('~'):
                 path = path.replace(user_dir, '~' + os.sep)
             completions.append(path.replace(fixed, "", 1))
         return completions
