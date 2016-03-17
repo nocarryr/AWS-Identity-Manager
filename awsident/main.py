@@ -12,6 +12,8 @@ PY2 = sys.version_info.major == 2
 
 class Main(cmd2.Cmd):
     prompt = '> '
+    doc_cmds = ['save', 'change', 'add', 'edit', 'import']
+    undoc_cmds = ['exit', 'help', 'quit']
     multilineCommands = ['add']
     add_command_steps = ['name', 'access_key_id', 'secret_access_key']
     add_command_step = None
@@ -115,9 +117,9 @@ class Main(cmd2.Cmd):
         print('Reload complete')
     def print_topics(self, header, cmds, cmdlen, maxcol):
         if 'Documented commands' in header:
-            cmds = ['save', 'change', 'add', 'edit', 'import']
+            cmds = self.doc_cmds
         elif 'Undocumented commands' in header:
-            cmds = ['exit', 'help', 'quit']
+            cmds = self.undoc_cmds
         cmd2.Cmd.print_topics(self, header, cmds, cmdlen, maxcol)
     def preloop(self):
         self.do_help('')
