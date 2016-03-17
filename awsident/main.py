@@ -12,7 +12,7 @@ PY2 = sys.version_info.major == 2
 
 class Main(cmd2.Cmd):
     prompt = '> '
-    doc_cmds = ['save', 'change', 'add', 'edit', 'import']
+    doc_cmds = ['save', 'change', 'add', 'edit', 'import', 'reload']
     undoc_cmds = ['exit', 'help', 'quit']
     multilineCommands = ['add']
     add_command_steps = ['name', 'access_key_id', 'secret_access_key']
@@ -115,6 +115,8 @@ class Main(cmd2.Cmd):
     def do_reload(self, arg):
         identity_store.reload()
         print('Reload complete')
+    def help_reload(self):
+        print('Reloads identities from config file')
     def print_topics(self, header, cmds, cmdlen, maxcol):
         if 'Documented commands' in header:
             cmds = self.doc_cmds

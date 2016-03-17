@@ -99,3 +99,7 @@ def test_import_completion(cli_app):
     cli_app.send('import {0}\ttest\tcredent\t'.format(os.getcwd()))
     cli_app.expect('.csv')
     cli_app.send_and_wait('')
+
+def test_help(cli_app):
+    for cmd in cli_app.app_class.doc_cmds:
+        cli_app.send_and_wait('help {0}'.format(cmd))
