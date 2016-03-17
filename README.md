@@ -25,3 +25,4 @@ Then use the following commands:
 * `add` Allows you to add a new set of credentials (identity)
 * `edit` Make changes to existing identity
 * `change` Select one of your stored identies and modifies (or creates) the configuration files for most AWS client libraries
+* `import` Import identities from a csv file downloaded from the IAM Console (created whenever you add new users)
