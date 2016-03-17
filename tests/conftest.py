@@ -80,6 +80,8 @@ def config_handler_fixtures(tmpdir):
 
 @pytest.fixture
 def cli_app(request, config_handler_fixtures):
+    from awsident.main import Main
+
     identity_store = config_handler_fixtures['identity_store']
     handler = config_handler_fixtures['handler']
     conf_path = identity_store.config_path
@@ -87,9 +89,21 @@ def cli_app(request, config_handler_fixtures):
     with open(os.path.join(conf_path, 'handlers.json'), 'w') as f:
         f.write(json.dumps(handler_conf))
     lf = open('pexpect.log', 'wb')
-    app = pexpect.spawn('awsidentity --pytest-mode -c {0}'.format(conf_path), logfile=lf)
+
+    class App(pexpect.spawn):
+        def expect_prompt(self, prompt=None):
+            if prompt is None:
+                prompt = Main.prompt
+            return self.expect(prompt)
+        def send_and_wait(self, line, prompt=None):
+            rs = self.sendline(line)
+            rp = self.expect_prompt(prompt)
+            return rs, rp
+
+    app = App('awsidentity --pytest-mode -c {0}'.format(conf_path), logfile=lf)
     app.config_handler_fixtures = config_handler_fixtures
-    app.expect('> ')
+    app.app_class = Main
+    app.expect_prompt()
     def fin():
         app.sendline('EOF')
         app.wait()
