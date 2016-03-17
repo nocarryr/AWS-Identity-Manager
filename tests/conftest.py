@@ -79,7 +79,7 @@ def config_handler_fixtures(tmpdir):
     )
 
 @pytest.fixture
-def cli_app(config_handler_fixtures):
+def cli_app(request, config_handler_fixtures):
     identity_store = config_handler_fixtures['identity_store']
     handler = config_handler_fixtures['handler']
     conf_path = identity_store.config_path
@@ -94,4 +94,5 @@ def cli_app(config_handler_fixtures):
         app.sendline('EOF')
         app.wait()
         lf.close()
+    request.addfinalizer(fin)
     return app

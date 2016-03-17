@@ -1,5 +1,3 @@
 [run]
-source = awsident/*
-
-[report]
-include = awsident/*
+source = awsident
+parallel = True
