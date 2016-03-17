@@ -15,7 +15,7 @@ setup(
     version = "0.0.2",
     author = "Matthew Reid",
     author_email = "matt@nomadic-recording.com",
-    description = ("Manage credentials for multiple AWS accounts"),
+    description = "Manage credentials for multiple AWS accounts",
     url='https://github.com/nocarryr/AWS-Identity-Manager',
     license='MIT',
     keywords = "aws",
@@ -44,5 +44,6 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
     ],
 )
