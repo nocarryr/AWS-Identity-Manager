@@ -26,3 +26,15 @@ Then use the following commands:
 * `edit` Make changes to existing identity
 * `change` Select one of your stored identies and modifies (or creates) the configuration files for most AWS client libraries
 * `import` Import identities from a csv file downloaded from the IAM Console (created whenever you add new users)
+
+### Additional Info
+All of the credentials are saved by default in your home directory:
+```
+.aws-identity-manager/identities.json
+```
+The scripts are designed to keep the permissions of this as well as the modified config files secured and only accessible to the current user.
+Before any changes are made to any existing AWS config files, they are backed up:
+```
+~/.aws/credentials.bak
+```
+This is only done if the backup filename doesn't already exist though.  In other words, it would be a good idea to have your credentials somewhere safe before running the script.
