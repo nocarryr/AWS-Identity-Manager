@@ -12,7 +12,7 @@ if py_ver.major >= 3:
 
 setup(
     name = "aws-identity-manager",
-    version = "0.0.2",
+    version = "0.0.3",
     author = "Matthew Reid",
     author_email = "matt@nomadic-recording.com",
     description = "Manage credentials for multiple AWS accounts",
