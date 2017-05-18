@@ -3,7 +3,7 @@ import os
 import string
 import json
 try:
-    import configparser as configparser
+    import ConfigParser as configparser
 except ImportError:
     import configparser
 
@@ -18,7 +18,7 @@ def read_conf_file(handler_cls):
     p = configparser.SafeConfigParser()
     p.read(fn)
     d = {}
-    for attr_key, option_name in list(handler_cls.attr_map.items()):
+    for attr_key, option_name in handler_cls.attr_map.items():
         if handler_cls.section_name.lower() == 'default':
             val = p.defaults().get(option_name)
         else:
@@ -33,7 +33,7 @@ def conf_matches_identity(handler_cls, identity):
         identity = Identity(**identity)
     for cls in handler_cls.__subclasses__():
         d = read_conf_file(cls)
-        for key in list(cls.attr_map.keys()):
+        for key in cls.attr_map.keys():
             if getattr(identity, key) != d[key]:
                 return False
     return True

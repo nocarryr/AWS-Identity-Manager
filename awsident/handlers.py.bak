@@ -4,7 +4,7 @@ import shutil
 import datetime
 import json
 try:
-    import configparser as configparser
+    import ConfigParser as configparser
 except ImportError:
     import configparser
 
@@ -94,10 +94,10 @@ class ConfigHandler(object):
                 return
         parsed = set()
         clsname = self.__class__.__name__
-        for key, val in list(conf.get(clsname, {}).items()):
+        for key, val in conf.get(clsname, {}).items():
             parsed.add(key)
             setattr(self, key, val)
-        for key, val in list(conf.get('Global', {}).items()):
+        for key, val in conf.get('Global', {}).items():
             if key in parsed:
                 continue
             setattr(self, key, val)
@@ -142,7 +142,7 @@ class ConfigHandler(object):
         return p
     def iter_conf_vals(self, identity=None):
         val = None
-        for ident_key, option_name in list(self.attr_map.items()):
+        for ident_key, option_name in self.attr_map.items():
             if identity is not None:
                 val = getattr(identity, ident_key)
             yield option_name, ident_key, val

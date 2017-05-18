@@ -89,7 +89,7 @@ def test_import_completion(cli_app):
 
     # user-expanded (~) completion
     rel_cwd = get_relative_cwd()
-    print(('relative cwd: {0}'.format(rel_cwd)))
+    print('relative cwd: {0}'.format(rel_cwd))
     rel_cwd = os.path.join('~', rel_cwd)
     cli_app.send('import {0}\ttest\tcredent\t'.format(rel_cwd))
     cli_app.expect('.csv')
