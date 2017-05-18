@@ -22,5 +22,5 @@ def test_identity_save(config_handler_fixtures, identity_fixures):
         handler.save_identity()
     del identity_store.identities[identity.id]
     new_identity = handler.save_identity()
-    for key in handler.attr_map.keys():
+    for key in list(handler.attr_map.keys()):
         assert getattr(new_identity, key) == getattr(identity, key)

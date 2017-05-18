@@ -20,7 +20,7 @@ class Main(cmd2.Cmd):
     pytest_mode = False
     @property
     def identities(self):
-        return [(key, str(identity)) for key, identity in identity_store.items()]
+        return [(key, str(identity)) for key, identity in list(identity_store.items())]
     def do_save(self, *args):
         try:
             identity = ConfigHandler.save_identity()
@@ -66,9 +66,9 @@ class Main(cmd2.Cmd):
         attr = self.select(self.add_command_steps, 'Select Attribute: ')
         prompt = 'Enter {0} [{1}]: '.format(attr, getattr(identity, attr))
         if PY2:
-            response = raw_input(prompt)
-        else:
             response = input(prompt)
+        else:
+            response = eval(input(prompt))
         if not response:
             print('No change detected')
         else:

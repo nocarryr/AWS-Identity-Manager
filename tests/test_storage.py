@@ -6,7 +6,7 @@ import pytest
 def test_add_single(identity_fixures, identity_store):
     for d in identity_fixures:
         identity = identity_store.add_identity(d)
-        for key, val in d.items():
+        for key, val in list(d.items()):
             assert getattr(identity, key) == val
 
 def test_add_multiple(identity_fixures, identity_store):
@@ -22,8 +22,8 @@ def test_id_validation(identity_fixures, identity_store):
     identity = list(identity_store.values())[0]
     original_id = identity.id
     identity.access_key_id = 'ichanged'
-    assert 'ichanged' in identity_store.keys()
-    assert original_id not in identity_store.keys()
+    assert 'ichanged' in list(identity_store.keys())
+    assert original_id not in list(identity_store.keys())
 
 def test_serialization(identity_fixures, identity_store):
     identity_store.add_identities(*identity_fixures)
@@ -32,13 +32,13 @@ def test_serialization(identity_fixures, identity_store):
     identity_store.load_from_config()
     for data in identity_fixures:
         identity = identity_store.get(data['access_key_id'])
-        for key, val in data.items():
+        for key, val in list(data.items()):
             assert getattr(identity, key) == val
 
 def test_identity_equality(identity_fixures, identity_store_with_data):
     from awsident.identity import Identity
 
-    keys = identity_store_with_data.keys()
+    keys = list(identity_store_with_data.keys())
     for data in identity_fixures:
         stored = identity_store_with_data.get(data['access_key_id'])
         test_ident = Identity(**data)

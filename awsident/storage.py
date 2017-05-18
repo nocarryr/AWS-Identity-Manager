@@ -43,7 +43,7 @@ class IdentityStore(object):
         self.load_from_config()
         self._loading = False
     def clear(self):
-        for identity in self.values():
+        for identity in list(self.values()):
             identity.storage = None
         self.identities.clear()
     def load_from_config(self):
@@ -56,7 +56,7 @@ class IdentityStore(object):
         with open(fn, 'r') as f:
             s = f.read()
         data = json.loads(s)
-        self.add_identities(*data.values())
+        self.add_identities(*list(data.values()))
         self._loading = False
     def save_to_config(self):
         if not os.path.exists(self.config_path):
@@ -97,9 +97,9 @@ class IdentityStore(object):
     def keys(self):
         return sorted(self.identities.keys())
     def values(self):
-        return (self.identities[key] for key in self.keys())
+        return (self.identities[key] for key in list(self.keys()))
     def items(self):
-        for key in self.keys():
+        for key in list(self.keys()):
             yield key, self.identities[key]
 
 identity_store = IdentityStore()
