@@ -4,7 +4,7 @@ import shutil
 import datetime
 import json
 try:
-    import configparser as configparser
+    import ConfigParser as configparser
 except ImportError:
     import configparser
 
